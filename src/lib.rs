@@ -76,3 +76,32 @@ pub async fn stop_container(container_id: String) -> Result<String, Box<dyn Erro
 
 	Ok(response_str)
 }
+
+//Pause a docker container from container ID
+pub async fn pause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
+	let mut response_str: String = "".to_string();
+
+	let endpoint = format!("http://localhost/containers/{}/pause", container_id);
+
+	match make_http_request(endpoint, "".to_string()).await {
+		Ok(resp) => response_str = resp,
+		Err(err) => eprintln!("Docker-rust http request error: {}", err),
+	}
+
+	Ok(response_str)
+}
+
+
+//Unpause a docker container from container ID
+pub async fn unpause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
+	let mut response_str: String = "".to_string();
+
+	let endpoint = format!("http://localhost/containers/{}/unpause", container_id);
+
+	match make_http_request(endpoint, "".to_string()).await {
+		Ok(resp) => response_str = resp,
+		Err(err) => eprintln!("Docker-rust http request error: {}", err),
+	}
+
+	Ok(response_str)
+}
