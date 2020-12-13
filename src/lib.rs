@@ -1,12 +1,17 @@
+//! Shipshape
+//! 
+//! A library for interacting with the Docker API from Rust
+//! Meant to be as simple as possible
+
 use std::error::Error;
 
 use hyper::{body, Body, Method, Request};
 use hyper_socket::UnixSocketConnector;
 
-//Socet to connect to
+///Socet to connect to
 static DOCKERSOCKET : &'static str = "/var/run/docker.sock";
 
-//Make HTTP requests
+///Make HTTP requests to Docker
 async fn make_http_request(endpoint: String, body_str: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let socket = UnixSocketConnector::new(DOCKERSOCKET);
 	let client = hyper::Client::builder()
@@ -35,7 +40,10 @@ async fn make_http_request(endpoint: String, body_str: String) -> Result<String,
 }
 
 
-//Create a docker container from an image
+///Create a docker container from an image
+///Must specify the full JSON encoded body to send to the API
+///See <https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate> for complete list of
+///valid options
 pub async fn create_container(body_str: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let mut response_str: String = "".to_string();
 
@@ -49,7 +57,7 @@ pub async fn create_container(body_str: String) -> Result<String, Box<dyn Error 
 	Ok(response_str)
 }
 
-//Start a docker container from container ID
+///Start a docker container from container ID
 pub async fn start_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let mut response_str: String = "".to_string();
 
@@ -63,7 +71,7 @@ pub async fn start_container(container_id: String) -> Result<String, Box<dyn Err
 	Ok(response_str)
 }
 
-//Stop a docker container from container ID
+///Stop a docker container from container ID
 pub async fn stop_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let mut response_str: String = "".to_string();
 
@@ -77,7 +85,7 @@ pub async fn stop_container(container_id: String) -> Result<String, Box<dyn Erro
 	Ok(response_str)
 }
 
-//Pause a docker container from container ID
+///Pause a docker container from container ID
 pub async fn pause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let mut response_str: String = "".to_string();
 
@@ -92,7 +100,7 @@ pub async fn pause_container(container_id: String) -> Result<String, Box<dyn Err
 }
 
 
-//Unpause a docker container from container ID
+///Unpause a docker container from container ID
 pub async fn unpause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
 	let mut response_str: String = "".to_string();
 
