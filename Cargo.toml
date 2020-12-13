@@ -1,6 +1,6 @@
 [package]
 name = "shipshape"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jacob <31115470+MrMcGoats@users.noreply.github.com>"]
 edition = "2018"
 license = "BSD-3-Clause"
