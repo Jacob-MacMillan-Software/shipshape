@@ -20,7 +20,7 @@ shipshape = "0.1.1"
 | Pausing a container | `pause_container(String)` | `/containers/{id}/pause` |
 | Unpausing a container | `unpause_container(String)` | `/containers/{id}/unpause` |
 
-The return type of every function is `Result<String, Box<dyn std::error::Error + Send + Sync>>`
+The return type of every function is `Result<String, Box<dyn std::error::Error + Send + Sync>>`.
 
 Every function takes a single parameter. `create_container` takes a JSON formated string, which is sent directly to the Docker API. This is detailed [here](https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate). The other functions take a string containing the container ID to operate on.
 
