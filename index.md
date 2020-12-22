@@ -11,6 +11,7 @@ shipshape = "0.1.1"
 ```
 
 ### Usage
+
 | Supported actions | Function | API Call |
 |---------------|----------------|-------------|
 | Creating a container from an image | `create_container(String)` | `/containers/create` |
