@@ -12,7 +12,7 @@ shipshape = "0.1.1"
 
 ### Usage
 | Supported actions | Function | API Call |
-| :---------------: | :----------------: | :-------------: |
+|---------------|----------------|-------------|
 | Creating a container from an image | `create_container(String)` | `/containers/create` |
 | Starting a container | `start_container(String)` | `/containers/{id}/start` |
 | Stoping a container | `stop_container(String)` | `/containers/{id}/stop` |
@@ -38,7 +38,7 @@ docker pull alpine
 ```rust
 extern crate shipshape;
 
-use shipshape::{create_container, start_container, pause_container};
+use shipshape::{create_container, start_container};
 
 #[dervie(Debug, Deserialize)]
 #[allow(non_snake_case)]
