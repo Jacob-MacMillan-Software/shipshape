@@ -1,37 +1,75 @@
-## Welcome to GitHub Pages
+## Shipshape
 
-You can use the [editor on GitHub](https://github.com/Jacob-MacMillan-Software/shipshape/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+A simple library for interacting with the Docker API through Rust.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Install
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+If you want to use shipshape in your project, simply include the following in your Cargo.toml:
+```
+[dependencies]
+shipshape = "0.1.1"
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Usage
+| Supported actions | Function | API Call |
+| :---------------: | :----------------: | :-------------: |
+| Creating a container from an image | `create_container(String)` | `/containers/create` |
+| Starting a container | `start_container(String)` | `/containers/{id}/start` |
+| Stoping a container | `stop_container(String)` | `/containers/{id}/stop` |
+| Pausing a container | `pause_container(String)` | `/containers/{id}/pause` |
+| Unpausing a container | `unpause_container(String)` | `/containers/{id}/unpause` |
 
-### Jekyll Themes
+The return type of every function is `Result<String, Box<dyn std::error::Error + Send + Sync>>`
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Jacob-MacMillan-Software/shipshape/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Every function takes a single parameter. `create_container` takes a JSON formated string, which is sent directly to the Docker API. This is detailed [here](https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate). The other functions take a string containing the container ID to operate on.
 
-### Support or Contact
+As the goal is to make this tool as simple as possible, the output from each function is the exact string returned by the API call, and API errors are not handled.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Examples
+
+#### Create and start a container
+
+This example uses [serde](https://crates.io/crates/serde) and [serde_json](https://crates.io/crates/serde_json) to extract the container ID from the string returned by `create_container`. This example also uses [tokio](https://crates.io/crates/tokio) to allow `main` to be async.  
+Running this example requires the `alpine` Docker image downloaded. To download this image, simply run
+```bash
+docker pull alpine
+```
+
+```rust
+extern crate shipshape;
+
+use shipshape::{create_container, start_container, pause_container};
+
+#[dervie(Debug, Deserialize)]
+#[allow(non_snake_case)]
+struct ContainerCreateReturn {
+  Id: String,
+  Warnings: Vec<String>
+}
+
+#[tokio::main]
+async fn main() {
+  //Create a container using the "alpine" image
+  match create_container(r#"{"Image": "alpine", "Cmd": ["echo", "hello world"], "AutoRemove": true"#.to_string()).await {
+    Ok(val) => {
+      //Convert the returned, JSON formated, String to a struct for easy parsing
+      let return_json: ContainerCreateReturn = serde_json::from_str(&val[..]).unwrap();
+      
+      //Start the container
+      match start_container(return_json.Id).await {
+        Ok(val) => {
+          //If val is empty, the container has started
+          assert_eq(val, "".to_string());
+        }
+        Err(err) => eprintln!("Error: {}", err),
+      }
+    }
+    Err(err) => eprintln!("Error: {}", err),
+  }
+}
+
+```
+
+### More documentation
+
+You can find more documentation on [docs.rs](https://docs.rs/shipshape/0.1.1/shipshape/), and on [crates.io](https://crates.io/crates/shipshape).
