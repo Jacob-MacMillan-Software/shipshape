@@ -5,7 +5,7 @@ A simple library for interacting with the Docker API through Rust.
 ### Install
 
 If you want to use shipshape in your project, simply include the following in your Cargo.toml:
-```
+```toml
 [dependencies]
 shipshape = "0.1.1"
 ```
@@ -40,6 +40,7 @@ docker pull alpine
 extern crate shipshape;
 
 use shipshape::{create_container, start_container};
+use serde::Deserialize;
 
 #[dervie(Debug, Deserialize)]
 #[allow(non_snake_case)]
