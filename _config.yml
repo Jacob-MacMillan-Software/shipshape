@@ -1,1 +1,5 @@
 theme: jekyll-theme-merlot
+title: Shipshape
+plugins:
+  - jekyll-seo-tag
+google_analytics: G-Y5N3SRFMS1
