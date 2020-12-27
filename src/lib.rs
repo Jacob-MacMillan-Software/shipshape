@@ -43,27 +43,27 @@ async fn make_http_request(endpoint: String, body_str: String) -> Result<String,
 ///Must specify the full JSON encoded body to send to the API
 ///See <https://docs.docker.com/engine/api/v1.41/#operation/ContainerCreate> for complete list of
 ///valid options
-pub async fn create_container(body_str: String) -> Result<String, Box<dyn Error + Send + Sync>> {
-	make_http_request("http://localhost/containers/create".to_string(), body_str).await
+pub fn create_container(body_str: String) -> impl futures::Future< Output = Result<String, Box<dyn Error + Send + Sync>>> {
+	make_http_request("http://localhost/containers/create".to_string(), body_str)
 }
 
 ///Start a docker container from container ID
-pub async fn start_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
-	make_http_request(format!("http://localhost/containers/{}/start", container_id), "".to_string()).await
+pub fn start_container(container_id: String) -> impl futures::Future< Output = Result<String, Box<dyn Error + Send + Sync>>> {
+	make_http_request(format!("http://localhost/containers/{}/start", container_id), "".to_string())
 }
 
 ///Stop a docker container from container ID
-pub async fn stop_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
-	make_http_request(format!("http://localhost/containers/{}/stop", container_id), "".to_string()).await
+pub fn stop_container(container_id: String) -> impl futures::Future< Output = Result<String, Box<dyn Error + Send + Sync>>> {
+	make_http_request(format!("http://localhost/containers/{}/stop", container_id), "".to_string())
 }
 
 ///Pause a docker container from container ID
-pub async fn pause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
-	make_http_request(format!("http://localhost/containers/{}/pause", container_id), "".to_string()).await
+pub fn pause_container(container_id: String) -> impl futures::Future< Output = Result<String, Box<dyn Error + Send + Sync>>> {
+	make_http_request(format!("http://localhost/containers/{}/pause", container_id), "".to_string())
 }
 
 
 ///Unpause a docker container from container ID
-pub async fn unpause_container(container_id: String) -> Result<String, Box<dyn Error + Send + Sync>> {
-	make_http_request(format!("http://localhost/containers/{}/unpause", container_id), "".to_string()).await 
+pub fn unpause_container(container_id: String) -> impl futures::Future< Output = Result<String, Box<dyn Error + Send + Sync>>> {
+	make_http_request(format!("http://localhost/containers/{}/unpause", container_id), "".to_string())
 }
