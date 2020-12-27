@@ -3,3 +3,5 @@ title: Shipshape
 plugins:
   - jekyll-seo-tag
 google_analytics: G-Y5N3SRFMS1
+github:
+   owner_name: Jacob MacMillan Software Inc.
